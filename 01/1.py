@@ -29,6 +29,7 @@ if __name__ == '__main__':
 
 INPUT_FILE='1-input.txt'
 # INPUT_FILE='1a-example.txt'
+# INPUT_FILE='1a-example2.txt'
 
 input = [line for line in get_file_contents(INPUT_FILE)[0]]
 
@@ -55,51 +56,31 @@ counter_0 = 0
 
 for line in input:
     num_rotations = int(line[1:])
+    num_full_rotations = num_rotations // 100
+    old_lock_pos = lock_pos
     match line[0]:
         case 'L':
-            while num_rotations:
-                # print('old_lock_pos L', lock_pos, num_rotations, counter_0)
-                if num_rotations > lock_pos:
-                    num_rotations -= lock_pos
-                    if lock_pos > 0:
-                        counter_0 += 1
-                    lock_pos = 100
-                elif num_rotations == lock_pos:
-                    lock_pos = 0
-                    counter_0 += 1
-                    num_rotations = 0
-                else:
-                    lock_pos -= num_rotations
-                    num_rotations = 0
-                # print('new_lock_pos L', lock_pos, num_rotations, counter_0)
+            # print('old_lock_pos L', lock_pos, num_rotations, counter_0)
+            # print('new_lock_pos L', lock_pos, num_rotations, counter_0)
+            if lock_pos != 0 and (num_rotations % 100) > lock_pos:
+                # Will rotate past 0
+                # print('L +1')
+                counter_0 += 1
+
+            lock_pos -= num_rotations
         case _:
-            while num_rotations:
-                # print('old_lock_pos R', lock_pos, num_rotations, counter_0)
-                if num_rotations > 100 - lock_pos:
-                    num_rotations -= 100 - lock_pos
-                    lock_pos = 0
-                    counter_0 += 1
-                elif num_rotations == 100 - lock_pos:
-                    lock_pos = 0
-                    counter_0 += 1
-                    num_rotations = 0
-                else:
-                    lock_pos += num_rotations
-                    num_rotations = 0
-                # print('new_lock_pos R', lock_pos, num_rotations, counter_0)
+            if (100 - lock_pos) < (num_rotations % 100):
+                # print('R +1')
+                counter_0 += 1
+            lock_pos += num_rotations
 
-    # print('step lock_pos', lock_pos, counter_0)
+    # print(f'{lock_pos % 100=}, {num_rotations=}, {num_full_rotations=}, {counter_0=}')
+    lock_pos %= 100
+    if 0 == lock_pos:
+        counter_0 += 1
+
+    counter_0 += num_full_rotations
+    # print('new counter_0=', counter_0)
     # print()
-
-    # num_full_rotations = int(lock_pos / 100.0)
-    # print('lock_pos', lock_pos, lock_pos % 100, int(lock_pos / 100), num_full_rotations, counter_0)
-    # lock_pos %= 100
-    # if 0 == lock_pos:
-    #     counter_0 += 1
-
-    # counter_0 += num_full_rotations
-    # if num_full_rotations > 0 and lock_pos == 0:
-    #     counter_0 -= 1
-    # print('new counter_0', counter_0)
 
 print('b: num zeros reached:', counter_0)
