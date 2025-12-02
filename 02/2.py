@@ -58,11 +58,15 @@ with PrintTiming('b'):
     invalid_ids = []
     for cur_range_str in input:
         cur_range_start, cur_range_stop = cur_range_str.split('-')
+        starting_seen = set()
         for i in range(int(cur_range_start), int(cur_range_stop) + 1):
             i_str = str(i)
             mid_pt = len(i_str) // 2
 
             for j in range(1, mid_pt + (1 if mid_pt % 2 == 0 else 1)):
+                if i_str[:j] in starting_seen:
+                    continue
+                starting_seen.add(i_str[:j])
                 multi = 1
                 while True:
                     crafted_str = i_str[:j] * (1 + multi)
