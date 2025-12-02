@@ -63,7 +63,7 @@ with PrintTiming('b'):
             i_str = str(i)
             mid_pt = len(i_str) // 2
 
-            for j in range(1, mid_pt + (1 if mid_pt % 2 == 0 else 1)):
+            for j in range(1, mid_pt + 1):
                 if i_str[:j] in starting_seen:
                     continue
                 starting_seen.add(i_str[:j])
