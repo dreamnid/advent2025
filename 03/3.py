@@ -48,25 +48,16 @@ with PrintTiming('a'):
 print('a', sum(max_jolt))
 
 def solver(my_str: str, desired_len: int):
-    max_digit = int(my_str[0])
-    max_digit_indices = list()
-    # Find the biggest digit that fits the desired length criteria
-    for i, digit in enumerate(my_str[:len(my_str) - desired_len+1]):
-        int_digit = int(digit)
-        if int_digit == max_digit:
-            max_digit_indices.append(i)
-        elif int_digit > max_digit:
-            max_digit = int_digit
-            max_digit_indices = [i]
+    if len(my_str) == desired_len:
+        return int(my_str)
 
-    # print(my_str, max_digit, max_digit_indices)
+    # Greedily find the biggest digit that fits the desired length criteria
+    max_digit = max([int(digit) for digit in my_str[:len(my_str) - desired_len + 1]])
+    max_digit_idx = my_str.index(str(max_digit))
 
     # If we want a number that has more than one digit, then move to the next digit
-    if desired_len > 1:
-        recurse_result = []
-        for i in max_digit_indices:
-           recurse_result.append(int(f'{max_digit}{solver(my_str[i+1:], desired_len-1)}'))
-        return max(recurse_result)
+    if 1 < desired_len:
+        return int(f'{max_digit}{solver(my_str[max_digit_idx + 1:], desired_len-1)}')
     else:
         return max_digit
 
