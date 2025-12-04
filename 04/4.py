@@ -30,7 +30,7 @@ if __name__ == '__main__':
 INPUT_FILE='4-input.txt'
 # INPUT_FILE='4a-example.txt'
 
-input = add_padding([[char for char in line] for line in get_file_contents(INPUT_FILE)[0]], '#')
+input = [[char for char in line] for line in get_file_contents(INPUT_FILE)[0]]
 
 with PrintTiming('a'):
     valid = 0
