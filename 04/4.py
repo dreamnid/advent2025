@@ -44,3 +44,29 @@ with PrintTiming('a'):
                 # row[j] = 'x'
 
 print('a', valid)
+
+with PrintTiming('b'):
+    total_removed = 0
+    while True:
+        removed = set()
+        for i, row in enumerate(input):
+            for j, val in enumerate(row):
+                if val in ('#', '.', 'x'):
+                    continue
+
+                if sum(n == '@' for n in get_neighbors(input, i, j)) < 4:
+                    valid += 1
+                    removed.add((i, j))
+                    # row[j] = 'x'
+        # pprint.pprint(removed)
+        if not removed:
+            break
+
+        for cur_remove in removed:
+            input[cur_remove[0]][cur_remove[1]] = 'x'
+        # pprint.pprint(input)
+
+        total_removed += len(removed)
+        # print('removed', len(removed), f'{total_removed=}')
+
+print('b', total_removed)
