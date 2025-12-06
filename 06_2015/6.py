@@ -34,7 +34,7 @@ input = [line for line in get_file_contents(INPUT_FILE)[0]]
 
 grid = defaultdict(lambda: defaultdict(bool))
 
-with PrintTiming() as t:
+with PrintTiming('a') as t:
     for line in input:
         splitted = line.split(' ')
         if splitted[0] == 'turn':
@@ -69,3 +69,38 @@ with PrintTiming() as t:
         # print()
 
 print('a:', count_on)
+
+with PrintTiming('b') as t:
+    grid = defaultdict(lambda: defaultdict(int))
+    for line in input:
+        splitted = line.split(' ')
+        if splitted[0] == 'turn':
+            start_coord = tuple(map(int, splitted[2].split(',')))
+            end_coord = tuple(map(int, splitted[4].split(',')))
+
+            match splitted[1]:
+                case 'on':
+                    mode = 1
+                case 'off':
+                    mode = -1
+                case _:
+                    raise ValueError(line)
+
+        else:
+            # toggle
+            start_coord = tuple(map(int, splitted[1].split(',')))
+            end_coord = tuple(map(int, splitted[3].split(',')))
+            mode = 2
+
+        for row in range(start_coord[0], end_coord[0] + 1):
+            for col in  range(start_coord[1], end_coord[1] + 1):
+                grid[row][col] += mode
+                if mode < 0:
+                    grid[row][col] = max(0, grid[row][col])
+
+    total_brightness = 0
+    for row in grid.values():
+        for col in row.values():
+            total_brightness += col
+
+print('b', total_brightness)
